@@ -1,48 +1,43 @@
-import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
-import { AboutComponent } from './about/about.component';
-import { ApiService } from './shared';
-import { routing } from './app.routing';
+import { HttpClientModule } from '@angular/common/http';
+import { ArticleLiveDirective } from './live/live-compile.directive';
+import { MatTabsModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
+import { CompilerFactory, COMPILER_OPTIONS, NgModule } from '@angular/core';
+import { CompilerConfig, JitCompiler } from '@angular/compiler';
+import { JitCompilerFactory } from '@angular/platform-browser-dynamic';
+
+import '@angular/compiler/src/jit/compile';
+import '@angular/compiler/src/config';
+
+export function createCompiler(compilerFactory: CompilerFactory) {
+    return compilerFactory.createCompiler();
+}
 
 @NgModule({
   imports: [
     BrowserModule,
-    HttpModule,
+    HttpClientModule,
     FormsModule,
-    routing
+    BrowserAnimationsModule,
+    MatTabsModule
   ],
   declarations: [
-    AppComponent,
-    HomeComponent,
-    AboutComponent
+      AppComponent,
+      ArticleLiveDirective
   ],
   providers: [
-    ApiService
+      { provide: COMPILER_OPTIONS, useValue: {}, multi: true},
+      { provide: CompilerFactory, useClass: JitCompilerFactory, deps: [COMPILER_OPTIONS]},
+      { provide: JitCompiler, useFactory: createCompiler, deps: [CompilerFactory]},
+      { provide: CompilerConfig, useValue: new CompilerConfig() }
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(public appRef: ApplicationRef) {}
-  hmrOnInit(store) {
-    console.log('HMR store', store);
-  }
-  hmrOnDestroy(store) {
-    let cmpLocation = this.appRef.components.map(cmp => cmp.location.nativeElement);
-    // recreate elements
-    store.disposeOldHosts = createNewHosts(cmpLocation);
-    // remove styles
-    removeNgStyles();
-  }
-  hmrAfterDestroy(store) {
-    // display new elements
-    store.disposeOldHosts();
-    delete store.disposeOldHosts;
-  }
+  constructor() {}
 }

@@ -8,6 +8,7 @@ var autoprefixer = require('autoprefixer');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var AngularCompilerPlugin = require('@ngtools/webpack').AngularCompilerPlugin;
 
 /**
  * Env
@@ -91,9 +92,13 @@ module.exports = function makeWebpackConfig() {
       {
         test: /\.ts$/,
         loaders: ['awesome-typescript-loader?' + atlOptions, 'angular2-template-loader', '@angularclass/hmr-loader'],
+        // loaders: ['@ngtools/webpack'],
         exclude: [isTest ? /\.(e2e)\.ts$/ : /\.(spec|e2e)\.ts$/, /node_modules\/(?!(ng2-.+))/]
       },
-
+      {
+          test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
+          loader: '@ngtools/webpack'
+      },
       // copy those assets to output
       {
         test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
@@ -172,6 +177,12 @@ module.exports = function makeWebpackConfig() {
       /angular(\\|\/)core(\\|\/)@angular/,
       root('./src') // location of your src
     ),
+
+    new AngularCompilerPlugin({
+        tsConfigPath: root('./tsconfig.json'),
+        entryModule: root('./src')+'/app/app.module#AppModule',
+        sourceMap: true
+    }),
 
     // Tslint configuration for webpack 2
     new webpack.LoaderOptionsPlugin({

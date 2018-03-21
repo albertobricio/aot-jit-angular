@@ -12,8 +12,15 @@
   },
   "compileOnSave": false,
   "buildOnSave": false,
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
   "awesomeTypescriptLoaderOptions": {
     "forkChecker": true,
     "useWebpackText": true
+  },
+  "angularCompilerOptions": {
+    "entryModule": "./src/app/app.module#AppModule"
   }
 }

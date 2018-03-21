@@ -1,19 +1,29 @@
 import { Component } from '@angular/core';
 
-import { ApiService } from './shared';
-
-import '../style/app.scss';
-
 @Component({
   selector: 'my-app', // <my-app></my-app>
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
-  url = 'https://github.com/preboot/angular2-webpack';
   title: string;
+  html: string;
+  isActive: boolean = false;
 
-  constructor(private api: ApiService) {
-    this.title = this.api.title;
+  constructor() {
+    this.title = 'AOT and JIT - same project';
+
+    this.html = `<div>
+<h2>Foo bar</h2>
+<mat-tab-group>
+  <mat-tab label="Tab 1">Content 1</mat-tab>
+  <mat-tab label="Tab 2">Content 2</mat-tab>
+</mat-tab-group>
+<p>Other content</p>
+</div>`;
   }
+
+  toggleHandler(){
+    this.isActive = !this.isActive;
+  }
+
 }
