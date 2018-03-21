@@ -7,12 +7,8 @@ import { ArticleLiveDirective } from './live/live-compile.directive';
 import { MatTabsModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { CompilerFactory, COMPILER_OPTIONS, NgModule } from '@angular/core';
-import { CompilerConfig, JitCompiler } from '@angular/compiler';
+import { CompilerFactory, COMPILER_OPTIONS, NgModule, Compiler } from '@angular/core';
 import { JitCompilerFactory } from '@angular/platform-browser-dynamic';
-
-import '@angular/compiler/src/jit/compile';
-import '@angular/compiler/src/config';
 
 export function createCompiler(compilerFactory: CompilerFactory) {
     return compilerFactory.createCompiler();
@@ -31,10 +27,9 @@ export function createCompiler(compilerFactory: CompilerFactory) {
       ArticleLiveDirective
   ],
   providers: [
-      { provide: COMPILER_OPTIONS, useValue: {}, multi: true},
-      { provide: CompilerFactory, useClass: JitCompilerFactory, deps: [COMPILER_OPTIONS]},
-      { provide: JitCompiler, useFactory: createCompiler, deps: [CompilerFactory]},
-      { provide: CompilerConfig, useValue: new CompilerConfig() }
+      {provide: COMPILER_OPTIONS, useValue: {}, multi: true},
+      {provide: CompilerFactory, useClass: JitCompilerFactory, deps: [COMPILER_OPTIONS]},
+      {provide: Compiler, useFactory: createCompiler, deps: [CompilerFactory]}
   ],
   bootstrap: [AppComponent]
 })

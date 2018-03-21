@@ -1,7 +1,6 @@
-import { Component, Directive, Input, NgModule, OnInit, Renderer2, ViewContainerRef } from '@angular/core';
+import { Compiler, Component, Directive, Input, NgModule, OnInit, Renderer2, ViewContainerRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatTabsModule } from '@angular/material';
-import { JitCompiler } from '@angular/compiler';
 
 @Directive({
     selector: '[ps-page-article]'
@@ -14,7 +13,7 @@ export class ArticleLiveDirective implements OnInit {
 
     constructor(
         private container: ViewContainerRef,
-        private compiler: JitCompiler,
+        private compiler: Compiler,
         private renderer: Renderer2,
     ) {
     }
